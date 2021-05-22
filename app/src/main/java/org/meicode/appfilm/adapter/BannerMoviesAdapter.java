@@ -49,7 +49,10 @@ public class BannerMoviesAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         View view = LayoutInflater.from(cont).inflate(R.layout.banner_movies,null);
         ImageView imgBanner = view.findViewById(R.id.banner_img);
-        Glide.with(cont).load(BannerList.get(position).getImgUrl()).into(imgBanner);
+        Glide.with(cont)
+                .load(BannerList.get(position).getImgUrl())
+                .fitCenter()
+                .into(imgBanner);
         container.addView(view);
         imgBanner.setOnClickListener(new View.OnClickListener() {
             @Override

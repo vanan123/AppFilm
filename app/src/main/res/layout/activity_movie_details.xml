@@ -38,7 +38,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/play_btn_bg"
-        android:drawableLeft="@drawable/ic_play"
+        android:drawableLeft="@drawable/ic_round_play"
         android:drawablePadding="16dp"
         android:fontFamily="@font/montserrat"
         android:paddingLeft="16dp"

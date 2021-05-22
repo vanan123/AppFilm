@@ -19,9 +19,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="?actionBarSize"
                     android:gravity="center_vertical"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#E3F308"
                     android:fontFamily="@font/montserrat_subrayada_bold"
-                    android:text="Movie Streaming App"
+                    android:text="@string/title"
                     android:textAlignment="center"
                     />
 
@@ -33,11 +33,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
+            android:animateLayoutChanges="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tabIndicatorColor="#FFFFFF"
-            app:tabSelectedTextColor="#FFFFFF"
+            app:tabIndicatorGravity="stretch"
+            app:tabIndicator="@drawable/tab_bg"
+            app:tabIndicatorColor="#00000000"
+            app:tabSelectedTextColor="#0F171E"
             app:tabTextColor="#9B9696">
 
             <com.google.android.material.tabs.TabItem
@@ -86,7 +89,7 @@
                 <androidx.viewpager.widget.ViewPager
                     android:id="@+id/banner_viewPager"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"></androidx.viewpager.widget.ViewPager>
+                    android:layout_height="match_parent" />
                 <!--        <LinearLayout-->
                 <!--            android:layout_width="wrap_content"-->
                 <!--            android:layout_height="wrap_content"-->
@@ -99,7 +102,7 @@
                     android:layout_centerInParent="true"
                     app:tabBackground="@drawable/indicator_selec"
                     app:tabIndicatorHeight="0dp"
-                    app:tabMaxWidth="15dp"></com.google.android.material.tabs.TabLayout>
+                    app:tabMaxWidth="15dp" />
 
                 <!--        </LinearLayout>-->
             </RelativeLayout>
@@ -110,6 +113,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:layout_marginBottom="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

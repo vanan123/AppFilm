@@ -38,7 +38,7 @@ import com.google.android.exoplayer2.util.Util;
 public class VideoPlayerActivity extends AppCompatActivity {
     private PlayerView playerV;
     private SimpleExoPlayer SimExo;
-    private static final String FILE_URL = "";
+    private static final String FILE_URL = "url";
     ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
