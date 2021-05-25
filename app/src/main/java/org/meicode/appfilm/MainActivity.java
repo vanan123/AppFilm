@@ -50,9 +50,9 @@ public class MainActivity extends AppCompatActivity {
 //Home
         HomeBannerList = new ArrayList<>();
         HomeBannerList.add(new BannerMovie( 1,"Đấu la đại lục","https://i0.wp.com/img.media3s.xyz/image/2021/01/dau-la-dai-luc.jpg", "https://drive.google.com/uc?export=download&id=14qvF_7NmoVbH1lXGJYglTPKzjdF5t7u7"));
-        HomeBannerList.add(new BannerMovie( 2,"One Piece","https://i0.wp.com/img.media3s.xyz/image/2018/05/one-piece-vua-hai-tac.jpg", ""));
-        HomeBannerList.add(new BannerMovie( 3,"Naruto","https://i0.wp.com/img.media3s.xyz/image/2016/05/naruto-suc-manh-vi-thu.jpg", ""));
-        HomeBannerList.add(new BannerMovie( 4,"Thanh gươm diệt quỷ","https://i0.wp.com/img.media3s.xyz/image/2021/05/thanh-guom-diet-quy-chuyen-tau-vo-tan.jpg", ""));
+        HomeBannerList.add(new BannerMovie( 2,"One Piece","https://i0.wp.com/img.media3s.xyz/image/2018/05/one-piece-vua-hai-tac.jpg", "https://www.youtube.com/watch?v=52c8H4l9UkM"));
+        HomeBannerList.add(new BannerMovie( 3,"Naruto","https://i0.wp.com/img.media3s.xyz/image/2016/05/naruto-suc-manh-vi-thu.jpg", "https://www.youtube.com/watch?v=52c8H4l9UkM"));
+        HomeBannerList.add(new BannerMovie( 4,"Thanh gươm diệt quỷ","https://i0.wp.com/img.media3s.xyz/image/2021/05/thanh-guom-diet-quy-chuyen-tau-vo-tan.jpg", "https://www.youtube.com/watch?v=52c8H4l9UkM"));
         HomeBannerList.add(new BannerMovie( 5,"86","https://i0.wp.com/img.media3s.xyz/image/2021/04/86.jpg", ""));
 
 //TvShows

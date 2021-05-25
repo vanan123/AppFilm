@@ -3,8 +3,10 @@ package org.meicode.appfilm;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.media.browse.MediaBrowser;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,12 +18,17 @@ import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.MediaSourceFactory;
+import com.google.android.exoplayer2.source.MergingMediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
@@ -33,13 +40,25 @@ import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 import com.google.android.exoplayer2.util.Util;
+
+import at.huber.youtubeExtractor.VideoMeta;
+import at.huber.youtubeExtractor.YouTubeExtractor;
+import at.huber.youtubeExtractor.YtFile;
 
 public class VideoPlayerActivity extends AppCompatActivity {
     private PlayerView playerV;
     private SimpleExoPlayer SimExo;
     private static final String FILE_URL = "url";
     ProgressBar progressBar;
+
+    boolean playWhenReady = true;
+    int currentWindow = 0;
+    long playbackPosition = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +69,12 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
         playerV = findViewById(R.id.player);
         progressBar = findViewById(R.id.progress_bar);
-        setUpPlayerExo(getIntent().getStringExtra("url"));
+        String url = getIntent().getStringExtra("url");
+        if(url.contains("youtube")) {
+            setUpPlayerYoutube(url);
+        } else {
+            setUpPlayerExo(url);
+        }
         SimExo.addListener(new Player.EventListener() {
             @Override
             public void onTimelineChanged(Timeline timeline, @Nullable Object manifest, int reason) {
@@ -110,15 +134,44 @@ public class VideoPlayerActivity extends AppCompatActivity {
     }
     private void setUpPlayerExo(String url){
         LoadControl Load = new DefaultLoadControl();
-        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelector  Track = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
-
-        SimExo = ExoPlayerFactory.newSimpleInstance(this,Track,Load);
+//        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+//        TrackSelector  Track = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
+        SimExo = new SimpleExoPlayer.Builder(this).build();
         playerV.setPlayer(SimExo);
         DataSource.Factory dataSourceFac = new DefaultDataSourceFactory(this, Util.getUserAgent(this,"movieapp"));
-        MediaSource Media = new ExtractorMediaSource.Factory(dataSourceFac).createMediaSource(Uri.parse(url));
-        SimExo.prepare(Media);
+        MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFac)
+                .createMediaSource(MediaItem.fromUri(url));
+        SimExo.setMediaSource(mediaSource);
+        SimExo.prepare();
         SimExo.setPlayWhenReady(true);
+    }
+    private void setUpPlayerYoutube(String url) {
+        SimExo = new SimpleExoPlayer.Builder(this).build();
+        playerV.setPlayer(SimExo);
+        new YouTubeExtractor(this) {
+            @Override
+            protected void onExtractionComplete(SparseArray<YtFile> ytFiles, VideoMeta videoMeta) {
+                if(ytFiles != null) {
+                    int videoTag = 137; //video tag for 1080p MP4
+                    int audioTag = 140; //Audio tag for m4a
+                    MediaSource audioSrc = new ProgressiveMediaSource
+                            .Factory(new DefaultHttpDataSource.Factory())
+                            .createMediaSource(MediaItem.fromUri(ytFiles.get(audioTag).getUrl()));
+                    MediaSource videoSrc = new ProgressiveMediaSource
+                            .Factory(new DefaultHttpDataSource.Factory())
+                            .createMediaSource(MediaItem.fromUri(ytFiles.get(videoTag).getUrl()));
+                    SimExo.setMediaSource(new MergingMediaSource(
+                            true,
+                            videoSrc,
+                            audioSrc),
+                            true
+                    );
+                    SimExo.prepare();
+                    SimExo.setPlayWhenReady(playWhenReady);
+                    SimExo.seekTo(currentWindow, playbackPosition);
+                }
+            }
+        }.extract(url, false, true);
     }
     @Override
     protected void onDestroy(){
