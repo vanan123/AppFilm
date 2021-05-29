@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">AppFilm</string>
     <string name="title">Movie Streaming App</string>
+    <string name="login_greeting">Xin chào</string>
+    <string name="login_greeting_subtitle">Đăng nhập vào tài khoản của bạn</string>
+    <string name="sign_up_greeting">Tạo tài khoản</string>
 </resources>

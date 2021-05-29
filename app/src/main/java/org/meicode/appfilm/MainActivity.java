@@ -6,11 +6,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 
 import org.meicode.appfilm.adapter.BannerMoviesAdapter;
@@ -24,6 +27,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
+
+    BottomNavigationView bottomNavigationView;
+
     BannerMoviesAdapter AdapterBanner;
     TabLayout IncaditorTab , categoryTab ;
     ViewPager banner;
@@ -46,6 +52,23 @@ public class MainActivity extends AppCompatActivity {
         categoryTab = findViewById(R.id.tabLayout);
         nestedScroll = findViewById(R.id.nested_Scroll);
         appBar = findViewById(R.id.appbar);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.menu_item_acc:
+                    Intent loginIntent = new Intent(this, LoginActivity.class);
+                    startActivity(loginIntent);
+                    return true;
+                case R.id.menu_item_home:
+                    Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.menu_item_fav:
+                    Toast.makeText(this,"Favorite clicked", Toast.LENGTH_SHORT).show();
+                    return true;
+                default:
+                    return false;
+            }
+        });
 
 //Home
         HomeBannerList = new ArrayList<>();

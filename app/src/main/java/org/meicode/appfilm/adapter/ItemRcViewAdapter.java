@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,15 +37,17 @@ public class ItemRcViewAdapter extends RecyclerView.Adapter<ItemRcViewAdapter.It
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        Glide.with(cont).load(ItemList.get(position).getImgUrl()).into(holder.itemImg);
+        CategoryItem item = ItemList.get(position);
+        holder.itemTitle.setText(item.getMovieName());
+        Glide.with(cont).load(item.getImgUrl()).into(holder.itemImg);
         holder.itemImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(cont, MovieDetails.class);
-                i.putExtra("movieId",ItemList.get(position).getId());
-                i.putExtra("movieName",ItemList.get(position).getMovieName());
-                i.putExtra("movieImageUrl",ItemList.get(position).getImgUrl());
-                i.putExtra("movieFile",ItemList.get(position).getFileUrl());
+                i.putExtra("movieId",item.getId());
+                i.putExtra("movieName",item.getMovieName());
+                i.putExtra("movieImageUrl",item.getImgUrl());
+                i.putExtra("movieFile",item.getFileUrl());
                 cont.startActivity(i);
             }
         });
@@ -57,9 +60,11 @@ public class ItemRcViewAdapter extends RecyclerView.Adapter<ItemRcViewAdapter.It
 
     public static final class ItemViewHolder extends RecyclerView.ViewHolder {
         ImageView itemImg;
+        TextView itemTitle;
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             itemImg = (ImageView) itemView.findViewById(R.id.item_img);
+            itemTitle = (TextView) itemView.findViewById(R.id.item_title);
         }
     }
 }
