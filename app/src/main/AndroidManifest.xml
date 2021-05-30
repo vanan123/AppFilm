@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppFilm">
-        <activity android:name=".SignUp"></activity>
+        <activity android:name=".UserProfileActivity"></activity>
+        <activity android:name=".SignUpActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".Splash">
             <intent-filter>
@@ -21,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".VideoPlayerActivity" />
-        <activity android:name=".MovieDetails" />
+        <activity android:name=".MovieDetailsActivity" />
         <activity android:name=".MainActivity" />
 
         <meta-data

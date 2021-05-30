@@ -7,14 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import org.meicode.appfilm.MovieDetails;
+import org.meicode.appfilm.MovieDetailsActivity;
 import org.meicode.appfilm.R;
 import org.meicode.appfilm.model.CategoryItem;
 
@@ -43,7 +42,7 @@ public class ItemRcViewAdapter extends RecyclerView.Adapter<ItemRcViewAdapter.It
         holder.itemImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(cont, MovieDetails.class);
+                Intent i = new Intent(cont, MovieDetailsActivity.class);
                 i.putExtra("movieId",item.getId());
                 i.putExtra("movieName",item.getMovieName());
                 i.putExtra("movieImageUrl",item.getImgUrl());

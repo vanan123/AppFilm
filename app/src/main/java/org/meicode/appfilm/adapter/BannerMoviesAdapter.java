@@ -6,15 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 
-import org.meicode.appfilm.MovieDetails;
+import org.meicode.appfilm.MovieDetailsActivity;
 import org.meicode.appfilm.R;
 import org.meicode.appfilm.model.BannerMovie;
 
@@ -57,7 +55,7 @@ public class BannerMoviesAdapter extends PagerAdapter {
         imgBanner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(cont, MovieDetails.class);
+                Intent i = new Intent(cont, MovieDetailsActivity.class);
                 i.putExtra("movieId",BannerList.get(position).getId());
                 i.putExtra("movieName",BannerList.get(position).getMovieName());
                 i.putExtra("movieImageUrl",BannerList.get(position).getImgUrl());

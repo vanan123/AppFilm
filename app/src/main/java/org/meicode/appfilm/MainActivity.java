@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -48,16 +50,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        IncaditorTab = findViewById(R.id.indicator);
-        categoryTab = findViewById(R.id.tabLayout);
-        nestedScroll = findViewById(R.id.nested_Scroll);
-        appBar = findViewById(R.id.appbar);
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        initViews();
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.menu_item_acc:
-                    Intent loginIntent = new Intent(this, LoginActivity.class);
-                    startActivity(loginIntent);
+                    SharedPreferences loginSharedPreferences = getApplicationContext().getSharedPreferences("isLoggedIn", MODE_PRIVATE);
+                    Boolean isLoggin = loginSharedPreferences.getBoolean("isLoggedIn", false);
+                    if(isLoggin) {
+                        // neu da dang nhap
+                        Intent userProfileIntent = new Intent(this, UserProfileActivity.class);
+                        startActivity(userProfileIntent);
+                    } else {
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    }
                     return true;
                 case R.id.menu_item_home:
                     Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show();
@@ -168,6 +173,15 @@ public class MainActivity extends AppCompatActivity {
         CateList.add(new AllCategory(4,"PHIM HOẠT HÌNH",homeCatListItem4));
         setAdapterRcView(CateList);
     }
+
+    private void initViews() {
+        IncaditorTab = findViewById(R.id.indicator);
+        categoryTab = findViewById(R.id.tabLayout);
+        nestedScroll = findViewById(R.id.nested_Scroll);
+        appBar = findViewById(R.id.appbar);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+    }
+
     private void setAdapterBanner(ArrayList<BannerMovie> bannerList){
         banner = findViewById(R.id.banner_viewPager);
         AdapterBanner = new BannerMoviesAdapter(this, bannerList);

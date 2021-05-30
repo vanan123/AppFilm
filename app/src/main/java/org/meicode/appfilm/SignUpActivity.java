@@ -13,9 +13,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
-
 import org.meicode.appfilm.model.User;
 import org.meicode.appfilm.retrofitresponse.UserResponse;
 import org.meicode.appfilm.retrofitservices.UserService;
@@ -26,67 +23,58 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-    private EditText inputUsername, inputUserpassword;
-    private TextView toSignUp, loginErrMsg;;
-    private Button logInBtn;
-
-    // cho cái dialog xoay tròn luc login nữa là ok
+public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
+    private EditText signUpUsername, SignUpUserPassword, SignUpEmail;
+    private Button SignUpBtn;
+    private TextView linkToLogin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_sign_up);
         initViews();
 
-        toSignUp.setOnClickListener(v -> {
-            Intent signUpIntent = new Intent(this, SignUpActivity.class);
-            startActivity(signUpIntent);
+        linkToLogin.setOnClickListener(v -> {
+            Intent toLogInIntent = new Intent(this, LoginActivity.class);
+            startActivity(toLogInIntent);
         });
     }
 
     private void initViews() {
-        inputUsername = findViewById(R.id.inputUsername);
-        inputUserpassword = findViewById(R.id.inputUserpassword);
-        logInBtn = findViewById(R.id.logInBtn);
-        toSignUp = findViewById(R.id.linkToSignUp);
-        logInBtn.setOnClickListener(this);
+        signUpUsername = findViewById(R.id.signUpUsername);
+        SignUpEmail = findViewById(R.id.SignUpEmail);
+        SignUpUserPassword = findViewById(R.id.SignUpUserPassword);
+        SignUpBtn = findViewById(R.id.SignUpBtn);
+        linkToLogin = findViewById(R.id.linkToLogin);
 
-        loginErrMsg = findViewById(R.id.loginErrMsg);
+        SignUpBtn.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()) {
-            case  R.id.logInBtn: {
-                login();
-                break;
-            }
+        switch (v.getId()) {
+            case R.id.SignUpBtn:
+                register();
         }
     }
 
-    private void login() {
+    private void register() {
         ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Đang đăng nhập");
-        progressDialog.show();
+        progressDialog.setMessage("Đang đăng ký");
         Retrofit retrofit = new Retrofit.Builder()
-                                .baseUrl("http://192.168.56.1/moviee/public/api/v1/")
-                                .addConverterFactory(GsonConverterFactory.create())
-                                .build();
-        retrofit.create(UserService.class).login(inputUsername.getText().toString(), inputUserpassword.getText().toString())
+                .baseUrl("http://192.168.56.1/moviee/public/api/v1/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        retrofit.create(UserService.class).register(signUpUsername.getText().toString(), SignUpEmail.getText().toString(), SignUpUserPassword.getText().toString())
                 .enqueue(new Callback<UserResponse>() {
                     @Override
                     public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                        Log.d("LoginSuccess:", response.message());
                         if(response.isSuccessful() && response.body().getSuccess()) {
-                            Log.d("success login message:", response.body().getSuccess().toString());
                             // login success
                             SharedPreferences isLoggin = getApplicationContext().getSharedPreferences("isLoggedIn", MODE_PRIVATE);
                             SharedPreferences.Editor editor = isLoggin.edit();
                             editor.putBoolean("isLoggedIn", true);
                             editor.apply();
                             User user = response.body().getUser();
-                            String t = isLoggin.getBoolean("isLoggedIn", false) ? "true" : "false";
-                            Log.d("isLoggin", t);
                             SharedPreferences userSharedPreferences = getApplicationContext().getSharedPreferences("user", MODE_PRIVATE);
                             SharedPreferences.Editor editor1 = userSharedPreferences.edit();
                             editor1.putString("id", String.valueOf(user.getId()));
@@ -94,19 +82,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             editor1.putString("email", user.getEmail());
                             editor1.apply();
                             progressDialog.dismiss();
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        }
-                        else {
-                            progressDialog.dismiss();
-                            loginErrMsg.setVisibility(View.VISIBLE);
+                            Toast.makeText(SignUpActivity.this,"Đăng ký thành công", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(SignUpActivity.this, UserProfileActivity.class));
                         }
                     }
+
                     @Override
                     public void onFailure(Call<UserResponse> call, Throwable t) {
-                        progressDialog.dismiss();
                         Log.d("LoginErr:", t.getMessage());
                     }
                 });
-
     }
 }
